@@ -448,8 +448,8 @@
         <!-- Step 6: Skills -->
         <section id="step-6" class="step-card">
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">Power up your agent!</h2>
-                <p class="text-gray-600">Choose up to 3 skills for your new friend.</p>
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Choose Your AI Capabilities</h2>
+                <p class="text-gray-600">Select up to 3 AI skills for your project.</p>
             </div>
 
             <div class="grid md:grid-cols-3 gap-6">
@@ -697,8 +697,12 @@
             } else if (currentStep === 2) {
                 nextStepNumber = 4;  // From collaboration to agent base
             } else if (currentStep === 3) {
-                // From project needs, go to identity for non-agents
-                nextStepNumber = 7;
+                // From project needs, check if AI is selected
+                if (agent.needs.includes('ai')) {
+                    nextStepNumber = 6;  // Go to skills selection for AI projects
+                } else {
+                    nextStepNumber = 7;  // Go directly to identity for non-AI projects
+                }
             } else if (currentStep === 4) {
                 nextStepNumber = 5;  // From agent base to personality
             } else if (currentStep === 5) {
@@ -729,12 +733,22 @@
             // Handle back navigation based on current step and project type
             if (currentStep === 7) {
                 if (agent.type !== 'agent' && agent.type !== 'team') {
-                    previousStepNumber = 3;  // Back to project needs for non-agents
+                    // For non-agents, check if they came through skills
+                    if (agent.needs.includes('ai')) {
+                        previousStepNumber = 6;  // Back to skills if AI was selected
+                    } else {
+                        previousStepNumber = 3;  // Back to project needs otherwise
+                    }
                 } else {
                     previousStepNumber = 6;  // Back to skills for agents
                 }
             } else if (currentStep === 6) {
-                previousStepNumber = 5;  // Back to personality
+                // From skills, check project type
+                if (agent.type !== 'agent' && agent.type !== 'team') {
+                    previousStepNumber = 3;  // Back to project needs for non-agents
+                } else {
+                    previousStepNumber = 5;  // Back to personality for agents
+                }
             } else if (currentStep === 5) {
                 previousStepNumber = 4;  // Back to agent base
             } else if (currentStep === 4) {
