@@ -160,7 +160,7 @@
             border-radius: 50%;
             border-top: 2px solid #60a5fa;
             animation: spin 1s linear infinite;
-            margin-left: 8px;
+            vertical-align: middle;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -546,7 +546,11 @@
             <p class="text-gray-500 text-sm mb-6"><i class="fas fa-edit mr-1"></i> You can edit the prompt before copying!</p>
 
             <div id="summary-container" class="bg-gray-100 p-4 sm:p-6 md:p-8 rounded-2xl text-left">
-                <textarea id="prompt-output" class="whitespace-pre-wrap text-sm sm:text-base w-full min-h-[400px] p-4 border-2 border-gray-300 rounded-lg resize-y focus:border-blue-500 focus:outline-none transition-colors" readonly></textarea>
+                <div id="loading-indicator" class="hidden text-center mb-4">
+                    <span class="loading-spinner"></span>
+                    <span class="ml-2 text-gray-600">Enhancing prompt with AI reasoning...</span>
+                </div>
+                <textarea id="prompt-output" class="whitespace-pre-wrap text-sm sm:text-base w-full p-4 border-2 border-gray-300 rounded-lg resize-none focus:border-blue-500 focus:outline-none transition-colors overflow-hidden" readonly></textarea>
             </div>
 
             <div class="mt-8 flex flex-col sm:flex-row justify-center gap-3">
@@ -661,6 +665,13 @@
                 icon.classList.remove('fa-eye-slash');
                 icon.classList.add('fa-eye');
             }
+        }
+
+        function autoResizeTextarea(textarea) {
+            // Reset height to auto to get the correct scrollHeight
+            textarea.style.height = 'auto';
+            // Set the height to the scrollHeight plus some padding
+            textarea.style.height = textarea.scrollHeight + 'px';
         }
 
         function showCustomAgentInput() {
@@ -905,29 +916,42 @@
 
             // Show loading state
             const promptOutput = document.getElementById('prompt-output');
+            const loadingIndicator = document.getElementById('loading-indicator');
             const summaryContainer = document.getElementById('summary-container');
             
             if (useReasoning && geminiService && geminiService.validateApiKey()) {
-                promptOutput.innerHTML = '<div class="text-center"><span class="loading-spinner"></span> Enhancing prompt with AI reasoning...</div>';
+                // Show loading indicator and clear textarea
+                loadingIndicator.classList.remove('hidden');
+                promptOutput.value = '';
+                promptOutput.setAttribute('readonly', 'true');
                 
                 try {
                     const promptGenerator = new PromptGenerator(agent, geminiService);
                     const prompt = await promptGenerator.generate();
+                    
+                    // Hide loading indicator and show prompt
+                    loadingIndicator.classList.add('hidden');
                     promptOutput.value = prompt;
                     promptOutput.removeAttribute('readonly');
+                    autoResizeTextarea(promptOutput);
                 } catch (error) {
                     console.error('Error generating enhanced prompt:', error);
+                    // Hide loading indicator
+                    loadingIndicator.classList.add('hidden');
+                    
                     // Fall back to standard prompt generation
                     const promptGenerator = new PromptGenerator(agent);
                     const prompt = promptGenerator.generate();
                     promptOutput.value = prompt;
                     promptOutput.removeAttribute('readonly');
+                    autoResizeTextarea(promptOutput);
                 }
             } else {
                 const promptGenerator = new PromptGenerator(agent);
                 const prompt = promptGenerator.generate();
                 promptOutput.value = prompt;
                 promptOutput.removeAttribute('readonly');
+                autoResizeTextarea(promptOutput);
             }
 
             const achievements = document.getElementById('achievements');
@@ -945,6 +969,16 @@
         function restart() {
             location.reload();
         }
+
+        // Add event listener for textarea input to auto-resize when user edits
+        document.addEventListener('DOMContentLoaded', function() {
+            const promptOutput = document.getElementById('prompt-output');
+            if (promptOutput) {
+                promptOutput.addEventListener('input', function() {
+                    autoResizeTextarea(this);
+                });
+            }
+        });
 
 
     </script>
