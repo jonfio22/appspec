@@ -99,6 +99,36 @@ class PromptGenerator {
         let prompt = "**Role:** You are a senior principal engineer with 15+ years building production AI systems.\n\n";
         prompt += "**Approach:** Provide exact, battle-tested solutions. No options or alternatives - just the best approach.\n\n";
         prompt += `**Project Name:** ${this.agent.name}\n\n`;
+        
+        // Add specific context based on agent type
+        if (this.agent.base) {
+            prompt += `**Agent Type:** ${this.agent.base}\n`;
+            
+            // Add industry-specific context
+            switch(this.agent.base) {
+                case 'Customer Service Agent':
+                    prompt += "**Focus:** Build a 24/7 automated support system with ticket management, FAQ handling, and human escalation.\n";
+                    break;
+                case 'Research Team':
+                    prompt += "**Focus:** Create a multi-agent research system with specialized agents for data collection, analysis, and synthesis.\n";
+                    break;
+                case 'Sales Assistant':
+                    prompt += "**Focus:** Develop an AI sales agent for lead scoring, automated outreach, and CRM integration.\n";
+                    break;
+                case 'Content Creator':
+                    prompt += "**Focus:** Build a content generation system for blog posts, social media, and marketing materials.\n";
+                    break;
+                case 'Code Assistant':
+                    prompt += "**Focus:** Create a coding companion for code generation, review, debugging, and documentation.\n";
+                    break;
+                case 'Custom Agent':
+                    if (this.agent.customAgentDescription) {
+                        prompt += `**Custom Requirements:** ${this.agent.customAgentDescription}\n`;
+                    }
+                    break;
+            }
+            prompt += "\n";
+        }
 
         if (this.agent.type === 'team') {
             prompt += "**Agent Type:** Team of Agents\n\n";

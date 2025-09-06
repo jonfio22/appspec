@@ -370,31 +370,51 @@
         <!-- Step 4: Choose Your Agent Base -->
         <section id="step-4" class="step-card">
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">Let's start with the basics!</h2>
-                <p class="text-gray-600">What is your new friend's main purpose?</p>
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Choose Your Agent Type</h2>
+                <p class="text-gray-600">Select a proven industry use case or create your own custom agent</p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <div class="option-card" onclick="selectOption(this, 'base', 'Knowledge Navigator')">
-                    <div class="icon"><i class="fas fa-book-open"></i></div>
-                    <h3 class="font-bold text-base sm:text-lg mb-1">Knowledge Navigator</h3>
-                    <p class="text-xs sm:text-sm text-gray-600">A brilliant mind for research, learning, and exploring new topics.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div class="option-card" onclick="selectOption(this, 'base', 'Customer Service Agent')">
+                    <div class="icon"><i class="fas fa-headset"></i></div>
+                    <h3 class="font-bold text-base sm:text-lg mb-1">Customer Service Agent</h3>
+                    <p class="text-xs sm:text-sm text-gray-600">24/7 support bot that handles inquiries, tickets, and escalations</p>
                 </div>
-                <div class="option-card" onclick="selectOption(this, 'base', 'Productivity Pal')">
-                    <div class="icon"><i class="fas fa-tasks"></i></div>
-                    <h3 class="font-bold text-base sm:text-lg mb-1">Productivity Pal</h3>
-                    <p class="text-xs sm:text-sm text-gray-600">An organized helper to manage tasks, schedules, and goals.</p>
+                <div class="option-card" onclick="selectOption(this, 'base', 'Research Team')">
+                    <div class="icon"><i class="fas fa-users"></i></div>
+                    <h3 class="font-bold text-base sm:text-lg mb-1">Research Team</h3>
+                    <p class="text-xs sm:text-sm text-gray-600">Multi-agent system for comprehensive research and analysis</p>
                 </div>
-                <div class="option-card" onclick="selectOption(this, 'base', 'Creative Muse')">
-                    <div class="icon"><i class="fas fa-paint-brush"></i></div>
-                    <h3 class="font-bold text-base sm:text-lg mb-1">Creative Muse</h3>
-                    <p class="text-xs sm:text-sm text-gray-600">An inspiring partner for brainstorming, writing, and art.</p>
+                <div class="option-card" onclick="selectOption(this, 'base', 'Sales Assistant')">
+                    <div class="icon"><i class="fas fa-chart-line"></i></div>
+                    <h3 class="font-bold text-base sm:text-lg mb-1">Sales Assistant</h3>
+                    <p class="text-xs sm:text-sm text-gray-600">Lead qualification, outreach, and deal closing automation</p>
                 </div>
-                <div class="option-card" onclick="selectOption(this, 'base', 'Conversation AI agent')">
-                    <div class="icon"><i class="fas fa-comments"></i></div>
-                    <h3 class="font-bold text-base sm:text-lg mb-1">Conversation AI agent</h3>
-                    <p class="text-xs sm:text-sm text-gray-600">A friendly chatterbox for fun, support, and daily chats.</p>
+                <div class="option-card" onclick="selectOption(this, 'base', 'Content Creator')">
+                    <div class="icon"><i class="fas fa-pen-fancy"></i></div>
+                    <h3 class="font-bold text-base sm:text-lg mb-1">Content Creator</h3>
+                    <p class="text-xs sm:text-sm text-gray-600">Blog posts, social media, and marketing content generation</p>
                 </div>
+                <div class="option-card" onclick="selectOption(this, 'base', 'Code Assistant')">
+                    <div class="icon"><i class="fas fa-code"></i></div>
+                    <h3 class="font-bold text-base sm:text-lg mb-1">Code Assistant</h3>
+                    <p class="text-xs sm:text-sm text-gray-600">Code generation, debugging, and technical documentation</p>
+                </div>
+                <div class="option-card" onclick="selectOption(this, 'base', 'Custom Agent'); showCustomAgentInput()">
+                    <div class="icon"><i class="fas fa-magic"></i></div>
+                    <h3 class="font-bold text-base sm:text-lg mb-1">Custom Agent</h3>
+                    <p class="text-xs sm:text-sm text-gray-600">Tell us exactly what your agent should do</p>
+                </div>
+            </div>
+            
+            <div id="custom-agent-input" class="mt-6 hidden">
+                <label class="block text-gray-700 font-bold mb-2" for="custom-agent-description">
+                    Describe your custom agent:
+                </label>
+                <textarea id="custom-agent-description" 
+                          placeholder="e.g., A legal document analyzer that reviews contracts and identifies key terms and risks" 
+                          class="w-full p-3 border-2 border-gray-300 rounded-lg resize-y min-h-[100px] focus:border-blue-500 focus:outline-none"
+                          rows="3"></textarea>
             </div>
             <div class="flex flex-col sm:flex-row justify-between gap-3 mt-8">
                 <button class="w-full sm:w-auto bg-gray-300 text-gray-700 px-6 sm:px-8 py-2 sm:py-3 rounded-full font-bold text-base sm:text-lg hover:bg-gray-400 transition-all shadow-lg order-2 sm:order-1" onclick="previousStep()">
@@ -522,10 +542,11 @@
         <!-- Final Summary -->
         <section id="step-8" class="step-card text-center">
             <h2 class="text-3xl font-bold text-gray-800 mb-2">Your Specification is Ready!</h2>
-            <p class="text-gray-600 mb-8">Copy the prompt below and paste it into your favorite AI to generate your project.</p>
+            <p class="text-gray-600 mb-4">Copy the prompt below and paste it into your favorite AI to generate your project.</p>
+            <p class="text-gray-500 text-sm mb-6"><i class="fas fa-edit mr-1"></i> You can edit the prompt before copying!</p>
 
             <div id="summary-container" class="bg-gray-100 p-4 sm:p-6 md:p-8 rounded-2xl text-left">
-                <pre id="prompt-output" class="whitespace-pre-wrap text-sm sm:text-base"></pre>
+                <textarea id="prompt-output" class="whitespace-pre-wrap text-sm sm:text-base w-full min-h-[400px] p-4 border-2 border-gray-300 rounded-lg resize-y focus:border-blue-500 focus:outline-none transition-colors" readonly></textarea>
             </div>
 
             <div class="mt-8 flex flex-col sm:flex-row justify-center gap-3">
@@ -642,9 +663,30 @@
             }
         }
 
+        function showCustomAgentInput() {
+            const customInput = document.getElementById('custom-agent-input');
+            const textarea = document.getElementById('custom-agent-description');
+            
+            // Toggle visibility
+            if (customInput.classList.contains('hidden')) {
+                customInput.classList.remove('hidden');
+                textarea.focus();
+            } else {
+                customInput.classList.add('hidden');
+            }
+        }
+
         function selectOption(element, category, value, maxSelections = 1) {
             const parent = element.parentElement;
             const options = parent.querySelectorAll('.option-card');
+            
+            // Hide custom input if selecting a different option
+            if (category === 'base' && value !== 'Custom Agent') {
+                const customInput = document.getElementById('custom-agent-input');
+                if (customInput) {
+                    customInput.classList.add('hidden');
+                }
+            }
             
             if (maxSelections === 1) {
                 options.forEach(opt => opt.classList.remove('selected'));
@@ -831,6 +873,14 @@
             agent.name = document.getElementById('agent-name').value;
             agent.description = document.getElementById('project-description').value;
             
+            // If custom agent is selected, include the custom description
+            if (agent.base === 'Custom Agent') {
+                const customDescription = document.getElementById('custom-agent-description').value;
+                if (customDescription) {
+                    agent.customAgentDescription = customDescription;
+                }
+            }
+            
             if (!agent.name) {
                 alert("Please give your project a name.");
                 return;
@@ -863,18 +913,21 @@
                 try {
                     const promptGenerator = new PromptGenerator(agent, geminiService);
                     const prompt = await promptGenerator.generate();
-                    promptOutput.textContent = prompt;
+                    promptOutput.value = prompt;
+                    promptOutput.removeAttribute('readonly');
                 } catch (error) {
                     console.error('Error generating enhanced prompt:', error);
                     // Fall back to standard prompt generation
                     const promptGenerator = new PromptGenerator(agent);
                     const prompt = promptGenerator.generate();
-                    promptOutput.textContent = prompt;
+                    promptOutput.value = prompt;
+                    promptOutput.removeAttribute('readonly');
                 }
             } else {
                 const promptGenerator = new PromptGenerator(agent);
                 const prompt = promptGenerator.generate();
-                promptOutput.textContent = prompt;
+                promptOutput.value = prompt;
+                promptOutput.removeAttribute('readonly');
             }
 
             const achievements = document.getElementById('achievements');
@@ -885,7 +938,7 @@
 
         function copyPrompt() {
             const promptOutput = document.getElementById('prompt-output');
-            navigator.clipboard.writeText(promptOutput.textContent);
+            navigator.clipboard.writeText(promptOutput.value);
             alert('Prompt copied to clipboard!');
         }
 
