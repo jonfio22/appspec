@@ -685,16 +685,26 @@
             const currentStepElement = document.getElementById(`step-${currentStep}`);
             let nextStepNumber = currentStep + 1;
 
-            if (agent.type === 'team' && currentStep === 1) {
-                nextStepNumber = 2;
-            } else if (agent.type !== 'agent' && agent.type !== 'team') {
-                nextStepNumber = 3;
-            } else if (currentStep === 1 && agent.type === 'agent') {
-                nextStepNumber = 4;
+            // Handle step transitions based on current step and project type
+            if (currentStep === 1) {
+                if (agent.type === 'team') {
+                    nextStepNumber = 2;  // Go to collaboration model
+                } else if (agent.type === 'agent') {
+                    nextStepNumber = 4;  // Go to agent base
+                } else {
+                    nextStepNumber = 3;  // Go to project needs for non-agents
+                }
             } else if (currentStep === 2) {
-                nextStepNumber = 4;
+                nextStepNumber = 4;  // From collaboration to agent base
             } else if (currentStep === 3) {
-                nextStepNumber = 6;
+                // From project needs, go to identity for non-agents
+                nextStepNumber = 7;
+            } else if (currentStep === 4) {
+                nextStepNumber = 5;  // From agent base to personality
+            } else if (currentStep === 5) {
+                nextStepNumber = 6;  // From personality to skills
+            } else if (currentStep === 6) {
+                nextStepNumber = 7;  // From skills to identity
             }
 
             const nextStepElement = document.getElementById(`step-${nextStepNumber}`);
@@ -716,16 +726,27 @@
             const currentStepElement = document.getElementById(`step-${currentStep}`);
             let previousStepNumber = currentStep - 1;
 
-            if (currentStep === 6) {
-                previousStepNumber = 3;
+            // Handle back navigation based on current step and project type
+            if (currentStep === 7) {
+                if (agent.type !== 'agent' && agent.type !== 'team') {
+                    previousStepNumber = 3;  // Back to project needs for non-agents
+                } else {
+                    previousStepNumber = 6;  // Back to skills for agents
+                }
+            } else if (currentStep === 6) {
+                previousStepNumber = 5;  // Back to personality
+            } else if (currentStep === 5) {
+                previousStepNumber = 4;  // Back to agent base
             } else if (currentStep === 4) {
                 if (agent.type === 'team') {
-                    previousStepNumber = 2;
+                    previousStepNumber = 2;  // Back to collaboration model
                 } else {
-                    previousStepNumber = 1;
+                    previousStepNumber = 1;  // Back to project type
                 }
             } else if (currentStep === 3) {
-                previousStepNumber = 1;
+                previousStepNumber = 1;  // Back to project type
+            } else if (currentStep === 2) {
+                previousStepNumber = 1;  // Back to project type
             }
 
             const previousStepElement = document.getElementById(`step-${previousStepNumber}`);
